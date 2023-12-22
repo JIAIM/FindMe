@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Adding a Job</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.content.label }}<br>
+        {{ form.content(class="form-control") }}<br>
+        {% for error in form.content.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {% for error in form.image.errors %}
+            <div class="input__wrapper col-md-8">
+                <input type="file" name="file" id="input__file" class="input input__file" multiple>
+                <label for="input__file" class="input__file-button bg-light">
+                    <span class="input__file-icon-wrapper"><img class="input__file-icon" src="../static/download.png" alt="Выбрать файл" width="25"></span>
+                    <span class="input__file-button-text">Select a file</span>
+             </label>
+            </div>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {{message}}
+</form>
+{% endblock %}

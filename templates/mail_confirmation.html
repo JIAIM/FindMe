@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="logreg-forms">
+    <div class="form-signin">
+         <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">Confirm email</h1>
+        <form action="" method="post">
+            <input class="form-control" placeholder="Submit code" name="code_user-{{code}}" id="code_user">
+            <br>
+
+
+             <button type="submit" class="btn btn-primary" style="width: 100%;"><i
+                                            class="fa-solid fa-chevron-right"></i></button>
+            <br>
+            <br>
+            <button type="submit" name='back' class="btn btn-danger" style="width: 100%;"><i class="fa-solid fa-rotate-left"></i></button>
+            <br>
+            <br>
+            <button type="submit" name='return_code' class="btn btn-danger" style="width: 100%;">Send the code again</button>
+            <div style="color: white; padding-top:10px ; text-align:center">A code has been sent to your email</div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="logreg-forms">
+    <div class="form-signin">
+         <h1 class="h3 mb-3 font-weight-normal" style="text-align: center; padding-top:10px">Register</h1>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p style="color: white;">
+
+                {{ form.name(class="form-control", placeholder="Name") }}<br>
+                {% for error in form.name.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p style="color: white;">
+
+                {{ form.password(class="form-control", type="password", placeholder="Password") }}<br>
+                {% for error in form.password.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p style="color: white;">
+
+                {{ form.password_again(class="form-control", type="password", placeholder="Confirm Password") }}<br>
+                {% for error in form.password_again.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+
+        </form>
+        <div style="color: red; text-align:center; padding-bottom:10px">{{message}}</div>
+    </div>
+</div>
+{% endblock %}
