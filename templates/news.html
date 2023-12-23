@@ -54,7 +54,7 @@
                                       onclick="like({{item.id}})"
                                     ></i>
                                 {% endif %}
-                                <span class="stats-total" id="likes-count-{{item.id}}">{{ item.likes|length }}</span>
+                                <span class="stats-total" id="likes-count-{{item.id}}">{% if (item.likes|length) > 1 %} {{(item.likes|length)//2}} {% else %} {% if item.likes|length == '' %} {{0}} {% else %} {{1}}  {% endif %} {% endif %}</span>
                             </form>
                         </div>
                     </div>
