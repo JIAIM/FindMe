@@ -1,5 +1,7 @@
 import os
-
+from flask import Flask, render_template, url_for, request, redirect
+from flask_socketio import SocketIO, emit, join_room, leave_room
+import datetime
 from flask import Flask, render_template, request, session, url_for, send_from_directory, jsonify
 from werkzeug.utils import redirect
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -21,12 +23,74 @@ from waitress import serve
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__name__))
-app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['SECRET_KEY'] = 'secret_key'
 app.config['AVATARS_SIZE_TUPLE'] = (30, 60, 250)
 app.config['AVATARS_SAVE_PATH'] = os.path.join(f'{os.getcwd()}/static/avatars')
 login_manager = LoginManager()
 login_manager.init_app(app)
 avatars = Avatars(app)
+socketio = SocketIO(app)
+
+def now_datetime():
+    return datetime.datetime.now().strftime('%Y-%m-%d, %H:%M:%S')
+
+
+rooms = {
+    'main': [
+        { 'username': 'User', 'message': 'Hi, there! from MAIN room', 'room': 'main', 'date': now_datetime() },
+    ],
+}
+
+
+@app.route('/forum')
+def home():
+    page_title = 'forum'
+    return render_template('pages/forum.html', page_title=page_title, rooms=rooms)
+
+
+@app.route('/create-room', methods=['GET', 'POST'])
+def create_new_room():
+    page_title = 'Create new chat room'
+
+    if request.method == 'POST':
+        room_name = request.form.get('room_name')
+        rooms[room_name] = []
+        return redirect(url_for('home'))
+
+    return render_template('pages/create-room.html', page_title=page_title)
+
+
+@socketio.on('join')
+def handle_join(data):
+    print('handle_join', data)
+    room = data['room']
+    join_room(room)
+
+    msg = {'message': f'{now_datetime()}: {data["username"]} has entered the room {room}'}
+    emit('status', {**msg}, room=room)
+    emit('previous_messages', rooms[room])
+
+
+@socketio.on('leave')
+def handle_leave(data):
+    print('handle_leave', data)
+    room = data['room']
+    leave_room(room)
+    emit('status', {'message': f'{now_datetime()}: {data["username"]} has left room {room}'}, room=room)
+
+
+@socketio.on('message', namespace='/')
+def handle_message(data):
+    print('handle_message', data)
+    room = data['room']
+    data['date'] = now_datetime()
+    emit('message', {**data}, room=room)
+
+    if room not in rooms:
+        rooms[room] = []
+
+
+    rooms[room].append(data)
 
 
 @app.route('/avatars/<path:filename>')
@@ -803,7 +867,7 @@ def delete_account():
 def main():
     """ Запуск сервера"""
     port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
+    socketio.run(app,host='0.0.0.0', port=port, debug=True)
 
 
 if __name__ == '__main__':

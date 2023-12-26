@@ -42,6 +42,9 @@
 					 	<li class="nav-item">
 							<a class="nav-link" href="/news">News</a>
 					 	</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/forum">Forum</a>
+					 	</li>
 						{% if current_user.is_authenticated and current_user.admin_check == 1 %}
 							<li class="nav-item">
 								<a class="nav-link" href="/admin">Admin</a>
