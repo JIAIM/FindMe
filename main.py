@@ -184,7 +184,7 @@ def profile(name):
 
             if (keys != 'about' and 'about' in keys) or (
                     not str(request.files[keys_image]).split()[
-                            1] == "''" and 'file-' in keys_image):  # Реализация постов
+                            1] == "''" and 'file-' in keys_image):  # Реализация постів
                 about = data[keys]
                 id = keys.split('-')[1]
                 db_sess = db_session.create_session()
@@ -232,7 +232,7 @@ def profile(name):
                 db_sess.commit()
         except Exception:
             if not str(request.files['file3']).split()[
-                       1] == "''":  # Реализвация загрузки фотогорафии на профиль пользователя
+                       1] == "''":  # Реалізаці загрузки фотографії користувача
                 f = request.files.get('file3')
                 app.config['AVATARS_SAVE_PATH'] = os.path.join(f'{os.getcwd()}/static/avatars')
                 raw_filename = avatars.save_avatar(f)
